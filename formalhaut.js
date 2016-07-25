@@ -2,7 +2,7 @@
   window.formalhaut = {
     prepForm : function(e){
       e.preventDefault();
-      var form   = e.target || this,
+      var form   = (e.target || this),
           query  = 
             (function() {
               var inputs = form.querySelectorAll('input,textarea'),
@@ -77,7 +77,7 @@
             (
               (this.status >= 200 && this.status < 300) ?
                 console.info(xhr.responseText) :
-                  console.error('Error: ' + xhr.status || 'No data available') )
+                  console.error('Error: ' + (xhr.status || 'No data available') )
             ) : 
                 console.error('Error: ' + (xhr.status || 'No data available') );
         };
@@ -90,13 +90,13 @@
       while(len--)
       {
         var eListener = (
-                          ('addEventListener' in this) ?
+                          (!!'addEventListener' in this) ?
                             'addEventListener' :
-                              ('attachEvent' in this) ? 
+                              (!!'attachEvent' in this) ? 
                                 'attachEvent' :
                                   null
                         ),
-            ev        = ('addEventListener' in this) ?
+            ev        = (!!'addEventListener' in this) ?
                             'submit' :
                               'onsubmit';
         if(!!eListener)
