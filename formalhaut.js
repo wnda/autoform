@@ -1,4 +1,5 @@
 ;(function(){
+  if('document' in this && 'getElementsByTagName' in this.document && 'querySelectorAll' in this.document && 'XMLHttpRequest' in this)
   window.formalhaut = {
     prepForm : function(e){
       e.preventDefault();
@@ -36,14 +37,18 @@
         console.warn('No query/form/action');
         return false;
       }
-      var mthd = form.method.toUpperCase(),
-          actn = form.action,
+      var mthd = form.method.toUpperCase()      || 'GET',
+          actn = form.action                    || null,
+          enct = form.enctype                   || form.getAttribute("enctype"),
+          chst = form.acceptCharset             || form.getAttribute("accept-charset"),
+          rqbd = (mthd === 'POST' && !!query    ?  query : null),
+          rqmd = form.getAttribute('data-cors') || 'cors',
           ct   = (
-                  !!form.enctype && !!form.acceptCharset ?
-                    form.enctype + '; charset=' + form.acceptCharset :
+                  !!enct && !!chst ?
+                    enct + '; charset=' + chst :
                     (
-                    !!form.enctype ? 
-                      form.enctype + '; charset=utf-8' :
+                    !!enct ? 
+                      enct + '; charset=utf-8' :
                         'application/x-www-form-urlencoded; charset=utf-8'
                     )
                   );
@@ -51,9 +56,9 @@
       {
         fetch(actn,
           {
-            method  : mthd || 'GET',
-            body    : (mthd === 'POST' && !!query ? query : null),
-            mode    : form.getAttribute('data-cors') || 'cors',
+            method  : mthd,
+            body    : rqbd,
+            mode    : rqmd,
             headers : {
               'Content-Type'   : ct
             }
@@ -87,6 +92,7 @@
     init : function(){
       var forms = document.forms || document.getElementsByTagName('form'),
           len   = forms.length;
+          
       while(len--)
       {
         var eListener = (
