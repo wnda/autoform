@@ -2,8 +2,9 @@
   window.formalhaut = {
     prepForm : function(e){
       e.preventDefault();
-      var form  = document.getElementById(e.target.id),
-          query = 
+      var formId = e.target.id || this;
+          form   = document.getElementById(formId),
+          query  = 
             (function() {
               var inputs = form.querySelectorAll('input,textarea'),
                   i      = inputs.length,
