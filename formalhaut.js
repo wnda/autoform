@@ -52,8 +52,7 @@
             body    : query,
             mode    : form.getAttribute("data-cors")||"cors",
             headers : {
-              "Content-Type"   : ct,
-              "Content-Length" : query.length.toString()
+              "Content-Type"   : ct
             }
           })
         .then(function(resp){
@@ -70,7 +69,6 @@
         var xhr = new XMLHttpRequest();
         xhr.open(form.method.toUpperCase(),form.action,true);
         xhr.setRequestHeader('Content-type', ct);
-        xhr.setRequestHeader('Content-Length', query.length.toString());
         xhr.onreadystatechange = function(){
           this.readyState === 4 ? 
             (
