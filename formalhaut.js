@@ -50,7 +50,7 @@
           {
             method  : form.method.toUpperCase(),
             body    : query,
-            mode    : form.getAttribute("data-cors")||"no-cors",
+            mode    : form.getAttribute("data-cors")||"cors",
             headers : {
               "Content-Type"   : ct,
               "Content-Length" : query.length.toString()
