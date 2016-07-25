@@ -31,58 +31,61 @@
       !!query && formalhaut.sendForm(query,form);
     },
     sendForm : function(query,form){
-      if(!query || !query.length || !form)
+      if(!query || !query.length || !form || !form.action)
       {
-        return;
+        console.warn('No query/form/action');
+        return false;
       }
-      var ct = (
-                !!form.enctype && !!form.acceptCharset ?
-                  form.enctype + '; charset=' + form.acceptCharset :
-                  (
-                  !!form.enctype ? 
-                    form.enctype + '; charset=utf-8' :
-                      'application/x-www-form-urlencoded; charset=utf-8'
-                  )
-                );
+      var mthd = form.method.toUpperCase(),
+          actn = form.action,
+          ct   = (
+                  !!form.enctype && !!form.acceptCharset ?
+                    form.enctype + '; charset=' + form.acceptCharset :
+                    (
+                    !!form.enctype ? 
+                      form.enctype + '; charset=utf-8' :
+                        'application/x-www-form-urlencoded; charset=utf-8'
+                    )
+                  );
       if(!!window.fetch)
       {
-        fetch(form.action,
+        fetch(actn,
           {
-            method  : form.method.toUpperCase(),
-            body    : query,
-            mode    : form.getAttribute("data-cors")||"cors",
+            method  : mthd || 'GET',
+            body    : (mthd === 'POST' && !!query ? query || null),
+            mode    : form.getAttribute('data-cors') || 'cors',
             headers : {
-              "Content-Type"   : ct
+              'Content-Type'   : ct
             }
           })
         .then(function(resp){
           resp.status >= 200 && resp.status < 300 ?
             console.info(resp.status) :
-              console.error("Error: " + resp.message || "No data available");
+              console.error('Error: ' + (resp.message || 'No data available') );
         })
         .catch(function(resp){
-          console.log("Error: " + resp.message || "No data available");
+          console.error('Error: ' + (resp.message || 'No data available') );
         });
       }
       else
       {
         var xhr = new XMLHttpRequest();
-        xhr.open(form.method.toUpperCase(),form.action,true);
+        xhr.open(mthd, actn, true);
         xhr.setRequestHeader('Content-type', ct);
         xhr.onreadystatechange = function(){
           this.readyState === 4 ? 
             (
               (this.status >= 200 && this.status < 300) ?
                 console.info(xhr.responseText) :
-                  console.error(xhr.status+"Error")
+                  console.error('Error: ' + xhr.status || 'No data available') )
             ) : 
-                console.error(xhr.status+"Error");
+                console.error('Error: ' + (xhr.status || 'No data available') );
         };
         xhr.send(query);
       }
     },
     init : function(){
-      var forms = document.forms || document.getElementsByTagName("form"),
+      var forms = document.forms || document.getElementsByTagName('form'),
           len   = forms.length;
       while(len--)
       {
@@ -92,14 +95,17 @@
                               ('attachEvent' in this) ? 
                                 'attachEvent' :
                                   null
-                        );
+                        ),
+            ev        = ('addEventListener' in this) ?
+                            'submit' :
+                              'onsubmit';
         if(!!eListener)
         {
-          forms[len][eListener]("submit",formalhaut.prepForm,false);
+          forms[len][eListener](ev, formalhaut.prepForm, false);
         }
         else
         {
-          forms[len].onsubmit = formalhaut.prepForm;
+          forms[len][ev] = formalhaut.prepForm;
         }
       }
     }
