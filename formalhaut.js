@@ -95,11 +95,11 @@
                         );
         if(!!eListener)
         {
-          forms[len][eListener]("submit",prepForm,false);
+          forms[len][eListener]("submit",formalhaut.prepForm,false);
         }
         else
         {
-          forms[len].onsubmit = prepForm;
+          forms[len].onsubmit = formalhaut.prepForm;
         }
       }
     }
