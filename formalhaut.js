@@ -12,20 +12,20 @@
               for(;i>j;j++)
               {
                 var q = ( 
-                        !!inputs[j].getAttribute("name") && !!inputs[j].value ? 
-                          inputs[j].getAttribute("name") + "=" + inputs[j].value : 
+                        !!inputs[j].getAttribute('name') && !!inputs[j].value ? 
+                          inputs[j].getAttribute('name') + '=' + inputs[j].value : 
                             null 
                         );
                 !!q && str.push(q);
               }
               if(!str.length)
               {
-                console.error("Error in constructing query: no named input");
+                console.error('Error in constructing query: no named input');
                 return false;
               }
               else
               {
-                return str.join("&");
+                return str.join('&');
               }
             }());
       !!query && formalhaut.sendForm(query,form);
@@ -52,7 +52,7 @@
         fetch(actn,
           {
             method  : mthd || 'GET',
-            body    : (mthd === 'POST' && !!query ? query || null),
+            body    : (mthd === 'POST' && !!query ? query : null),
             mode    : form.getAttribute('data-cors') || 'cors',
             headers : {
               'Content-Type'   : ct
