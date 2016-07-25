@@ -1,4 +1,4 @@
-(function(){
+;(function(){
   window.formalhaut = {
     prepForm : function(e){
       e.preventDefault();
@@ -81,7 +81,7 @@
         xhr.send(query);
       }
     },
-    init     : function(){
+    init : function(){
       var forms = document.forms || document.getElementsByTagName("form"),
           len   = forms.length;
       while(len--)
