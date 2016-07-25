@@ -2,8 +2,7 @@
   window.formalhaut = {
     prepForm : function(e){
       e.preventDefault();
-      var formId = e.target.id || this;
-          form   = document.getElementById(formId),
+      var form   = e.target || this,
           query  = 
             (function() {
               var inputs = form.querySelectorAll('input,textarea'),
@@ -21,6 +20,7 @@
               }
               if(!str.length)
               {
+                console.error("Error in constructing query: no named input");
                 return false;
               }
               else
