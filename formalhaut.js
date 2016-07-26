@@ -15,6 +15,7 @@
                     i      = inputs.length,
                     j      = 0,
                     str    = []; // initialise query string
+                    
                 for(; i > j; j++)
                 {
                   var q = ( // need the name attributes and entered values
@@ -24,6 +25,7 @@
                           );
                   !!q && str.push(q); // only push query string parts if they exist
                 }
+                
                 if( !str.length ) // if empty array, stop here
                 {
                   console.error('Error in constructing query: no named input');
@@ -31,11 +33,12 @@
                 }
                 else
                 {
-                  return str.join('&'); //join name-input pairs with ampersand to form-urlencoded parameters 
+                  return str.join('&'); // join name-input pairs with ampersand to form-urlencoded parameters 
                 }
               }());
         !!query && formalhaut.sendForm(query,form); // pass the query and origin form to send function
       },
+      
       sendForm : function(query,form)
       {
         if( !query || !query.length || !form ) // don't do anything if we don't have the data we need
@@ -44,10 +47,10 @@
           return false;
         }
         var mthd = form.method.toUpperCase()      || 'GET', // default to GET
-            actn = ( !!query ? ( mthd === 'POST'  ?  form.action : encodeURI(form.action + "?" + query) ) : !1 ) || !1,
+            actn = ( !!query ? ( mthd === 'POST'  ?  form.action : encodeURI( form.action + "?" + query ) ) : !1 ) || !1,
             enct = form.enctype                   || form.getAttribute("enctype")        || !1, // try multiple means to get data
             chst = form.acceptCharset             || form.getAttribute("accept-charset") || !1, // try multiple means to get data
-            rqbd = (mthd === 'POST' && !!query    ?  query : null), // GET requests cannot have a body
+            rqbd = ( mthd === 'POST' && !!query   ?  query : null ), // GET requests cannot have a body
             rqmd = form.getAttribute('data-cors') || 'cors', 
             ct   = (
                     !!enct && !!chst ?
@@ -102,6 +105,7 @@
           xhr.send(rqbd); // no body for GET requests, as the query is added to the URL as a query string behind '?'
         }
       },
+      
       init : function()
       {
         var forms = document.forms || document.getElementsByTagName('form'),
@@ -120,6 +124,7 @@
               ev        = (!!'addEventListener' in this) ?
                               'submit' :
                                 'onsubmit';
+                                
           if(!!eListener)
           { // thing[thing] corresponds to thing.thing
             forms[z][eListener](ev, formalhaut.prepForm);
