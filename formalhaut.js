@@ -1,5 +1,4 @@
 ;(function(){
-  "use strict";
   if('querySelectorAll' in this.document)
   {
     window.formalhaut = {
