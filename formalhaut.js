@@ -1,4 +1,5 @@
 ;(function(){
+  "use strict";
   if('document' in this && 'getElementsByTagName' in this.document && 'querySelectorAll' in this.document && 'XMLHttpRequest' in this)
   {
     window.formalhaut = {
