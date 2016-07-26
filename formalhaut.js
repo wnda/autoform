@@ -19,9 +19,9 @@
                 for(; i > j; j++)
                 {
                   var q = ( // need the name attributes and entered values
-                          !!inputs[j].getAttribute('name') && !!inputs[j].value ? 
-                            inputs[j].getAttribute('name') + '=' + inputs[j].value : 
-                              !1
+                            !!inputs[j].getAttribute('name') && !!inputs[j].value ? 
+                              inputs[j].getAttribute('name') + '=' + inputs[j].value : 
+                                !1
                           );
                   !!q && str.push(q); // only push query string parts if they exist
                 }
@@ -36,6 +36,7 @@
                   return str.join('&'); // join name-input pairs with ampersand to form-urlencoded parameters 
                 }
               }());
+              
         !!query && formalhaut.sendForm(query,form); // pass the query and origin form to send function
       },
       
@@ -46,6 +47,7 @@
           console.warn('No query/form/action');
           return false;
         }
+        
         var mthd = form.method.toUpperCase()      || 'GET', // default to GET
             actn = ( !!query ? ( mthd === 'POST'  ?  form.action : encodeURI( form.action + "?" + query ) ) : !1 ) || !1,
             enct = form.enctype                   || form.getAttribute("enctype")        || !1, // try multiple means to get data
@@ -61,6 +63,7 @@
                           'application/x-www-form-urlencoded; charset=utf-8'
                       )
                     );
+                    
         if(!!window.fetch) // fetch barely supported yet
         {
           fetch(actn,
