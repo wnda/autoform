@@ -1,6 +1,6 @@
 ;(function(){
   "use strict";
-  if('document' in this && 'getElementsByTagName' in this.document && 'querySelectorAll' in this.document && 'XMLHttpRequest' in this)
+  if('querySelectorAll' in this.document)
   {
     window.formalhaut = {
       prepForm : function(e){
