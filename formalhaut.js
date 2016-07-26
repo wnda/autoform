@@ -1,75 +1,84 @@
-;(function(){
+;(function()
+{
   if('querySelectorAll' in this.document)
   {
-    window.formalhaut = {
-      prepForm : function(e){
+    window.formalhaut = 
+    {
+      prepForm : function(e)
+      {
         e.preventDefault();
-        var form   = (e.target || this),
+        var form   = ( e.target || this ), // get the form from the submit event
             query  = 
-              (function() {
-                var inputs = form.querySelectorAll('input,textarea'),
+              (function()
+              { // wrap the query string in a closure
+                var inputs = form.querySelectorAll('input,textarea'), // discourage the use of input[type=submit]
                     i      = inputs.length,
                     j      = 0,
-                    str    = [];
-                for(;i>j;j++)
+                    str    = []; // initialise query string
+                for(; i > j; j++)
                 {
-                  var q = ( 
+                  var q = ( // need the name attributes and entered values
                           !!inputs[j].getAttribute('name') && !!inputs[j].value ? 
                             inputs[j].getAttribute('name') + '=' + inputs[j].value : 
-                              null 
+                              !1
                           );
-                  !!q && str.push(q);
+                  !!q && str.push(q); // only push query string parts if they exist
                 }
-                if(!str.length)
+                if( !str.length ) // if empty array, stop here
                 {
                   console.error('Error in constructing query: no named input');
                   return false;
                 }
                 else
                 {
-                  return str.join('&');
+                  return str.join('&'); //join name-input pairs with ampersand to form-urlencoded parameters 
                 }
               }());
-        !!query && formalhaut.sendForm(query,form);
+        !!query && formalhaut.sendForm(query,form); // pass the query and origin form to send function
       },
-      sendForm : function(query,form){
-        if(!query || !query.length || !form || !form.action)
+      sendForm : function(query,form)
+      {
+        if( !query || !query.length || !form ) // don't do anything if we don't have the data we need
         {
           console.warn('No query/form/action');
           return false;
         }
-        var mthd = form.method.toUpperCase()      || 'GET',
-            actn = form.action                    || null,
-            enct = form.enctype                   || form.getAttribute("enctype"),
-            chst = form.acceptCharset             || form.getAttribute("accept-charset"),
-            rqbd = (mthd === 'POST' && !!query    ?  query : null),
-            rqmd = form.getAttribute('data-cors') || 'cors',
+        var mthd = form.method.toUpperCase()      || 'GET', // default to GET
+            actn = ( !!query ? ( mthd === 'POST'  ?  form.action : encodeURI(form.action + "?" + query) ) : !1 ) || !1,
+            enct = form.enctype                   || form.getAttribute("enctype")        || !1, // try multiple means to get data
+            chst = form.acceptCharset             || form.getAttribute("accept-charset") || !1, // try multiple means to get data
+            rqbd = (mthd === 'POST' && !!query    ?  query : null), // GET requests cannot have a body
+            rqmd = form.getAttribute('data-cors') || 'cors', 
             ct   = (
                     !!enct && !!chst ?
                       enct + '; charset=' + chst :
                       (
                       !!enct ? 
-                        enct + '; charset=utf-8' :
+                        enct + '; charset=utf-8' : // default to enforcing utf-8
                           'application/x-www-form-urlencoded; charset=utf-8'
                       )
                     );
-        if(!!window.fetch)
+        if(!!window.fetch) // fetch barely supported yet
         {
           fetch(actn,
+          {
+            method  : mthd, // GET   || POST
+            body    : rqbd, // query || null
+            mode    : rqmd, // cors  || no-cors
+            headers : 
             {
-              method  : mthd,
-              body    : rqbd,
-              mode    : rqmd,
-              headers : {
-                'Content-Type'   : ct
-              }
-            })
-          .then(function(resp){
-            resp.status >= 200 && resp.status < 300 ?
+              'Content-Type'   : ct
+            }
+          })
+          .then(function(resp)
+          {
+            resp.status >= 200 && resp.status < 300 ? // consider revising to resp.ok
+              // do something or execute configurable function to be specified in init() object
               console.info(resp.status) :
                 console.error('Error: ' + (resp.message || 'No data available') );
           })
-          .catch(function(resp){
+          .catch(function(resp)
+          {
             console.error('Error: ' + (resp.message || 'No data available') );
           });
         }
@@ -78,25 +87,30 @@
           var xhr = new XMLHttpRequest();
           xhr.open(mthd, actn, true);
           xhr.setRequestHeader('Content-type', ct);
-          xhr.onreadystatechange = function(){
+          // consider setting credentials header based on data-with-credentials attribute
+          xhr.onreadystatechange = function()
+          {
             this.readyState === 4 ? 
               (
-                (this.status >= 200 && this.status < 300) ?
+                (this.status >= 200 && this.status < 300) ? // don't revise to onload, for the sake of backwards compatibility
+                  // do something or execute configurable function to be specified in init() object
                   console.info(xhr.responseText) :
                     console.error('Error: ' + (xhr.status || 'No data available') )
               ) : 
                   console.error('Error: ' + (xhr.status || 'No data available') );
           };
-          xhr.send(query);
+          xhr.send(rqbd); // no body for GET requests, as the query is added to the URL as a query string behind '?'
         }
       },
-      init : function(){
+      init : function()
+      {
         var forms = document.forms || document.getElementsByTagName('form'),
-            len   = forms.length;
+            len   = forms.length,
+            z     = 0;
             
-        while(len--)
+        for(; len > z; z++)
         {
-          var eListener = (
+          var eListener = ( // use ternaries as more concise if-elseif-else hell
                             (!!'addEventListener' in this) ?
                               'addEventListener' :
                                 (!!'attachEvent' in this) ? 
@@ -107,20 +121,21 @@
                               'submit' :
                                 'onsubmit';
           if(!!eListener)
-          {
-            forms[len][eListener](ev, formalhaut.prepForm, false);
+          { // thing[thing] corresponds to thing.thing
+            forms[z][eListener](ev, formalhaut.prepForm);
           }
           else
           {
-            forms[len][ev] = formalhaut.prepForm;
+            forms[z][ev] = formalhaut.prepForm;
           }
         }
       }
     };
-    formalhaut.init();
   }
   else
-  {
+  { // querySelectorAll (IE8) enjoys less browser support than XMLHttpRequest (IE7), so it's a logical means to condition support of this lib
     console.warn("Your browser does not seem to support formalhaut.js");
   }
 })();
+// call init() to apply to all forms
+// formalhaut.init();
