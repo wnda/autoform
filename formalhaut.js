@@ -11,7 +11,7 @@
             query  = 
               (function()
               { // wrap the query string in a closure
-                var inputs = form.querySelectorAll('input,textarea'), // discourage the use of input[type=submit]
+                var inputs = form.querySelectorAll( 'input,textarea' ), // discourage the use of input[type=submit]
                     i      = inputs.length,
                     j      = 0,
                     str    = []; // initialise query string
@@ -19,41 +19,41 @@
                 for(; i > j; j++)
                 {
                   var q = ( // need the name attributes and entered values
-                            !!inputs[j].getAttribute('name') && !!inputs[j].value ? 
-                              inputs[j].getAttribute('name') + '=' + inputs[j].value : 
+                            !!inputs[j].getAttribute( 'name' ) && !!inputs[j].value ? 
+                              inputs[j].getAttribute( 'name' ) + '=' + inputs[j].value : 
                                 !1
                           );
-                  !!q && str.push(q); // only push query string parts if they exist
+                  !!q && str.push( q ); // only push query string parts if they exist
                 }
                 
                 if( !str.length ) // if empty array, stop here
                 {
-                  console.error('Error in constructing query: no named input');
+                  console.error( 'Error in constructing query: no named input' );
                   return false;
                 }
                 else
                 {
-                  return str.join('&'); // join name-input pairs with ampersand to form-urlencoded parameters 
+                  return str.join( '&' ); // join name-input pairs with ampersand to form-urlencoded parameters 
                 }
               }());
               
-        !!query && formalhaut.sendForm(query,form); // pass the query and origin form to send function
+        !!query && formalhaut.sendForm( query, form ); // pass the query and origin form to send function
       },
       
-      sendForm : function(query,form)
+      sendForm : function(query, form)
       {
         if( !query || !query.length || !form ) // don't do anything if we don't have the data we need
         {
-          console.warn('No query/form/action');
+          console.warn( 'No query/form/action' );
           return false;
         }
         
-        var mthd = form.method.toUpperCase()      || 'GET', // default to GET
-            actn = ( !!query ? ( mthd === 'POST'  ?  form.action : encodeURI( form.action + "?" + query ) ) : !1 ) || !1,
-            enct = form.enctype                   || form.getAttribute("enctype")        || !1, // try multiple means to get data
-            chst = form.acceptCharset             || form.getAttribute("accept-charset") || !1, // try multiple means to get data
-            rqbd = ( mthd === 'POST' && !!query   ?  query : null ), // GET requests cannot have a body
-            rqmd = form.getAttribute('data-cors') || 'cors', 
+        var mthd = form.method.toUpperCase()        || 'GET', // default to GET
+            actn = ( !!query ? ( mthd === 'POST'    ?  form.action : encodeURI( form.action + '?' + query ) ) : !1 ) || !1,
+            rqbd = ( mthd === 'POST' && !!query     ?  query : null ), // GET requests cannot have a body
+            rqmd = form.getAttribute( 'data-cors' ) || 'cors', 
+            enct = form.enctype                     || form.getAttribute( 'enctype' )        || !1, // try multiple means to get data
+            chst = form.acceptCharset               || form.getAttribute( 'accept-charset' ) || !1, // try multiple means to get data
             ct   = (
                     !!enct && !!chst ?
                       enct + '; charset=' + chst :
@@ -64,7 +64,7 @@
                       )
                     );
                     
-        if(!!window.fetch) // fetch barely supported yet
+        if( !!window.fetch ) // fetch barely supported yet
         {
           fetch(actn,
           {
@@ -80,32 +80,32 @@
           {
             resp.status >= 200 && resp.status < 300 ? // consider revising to resp.ok
               // do something or execute configurable function to be specified in init() object
-              console.info(resp.status) :
-                console.error('Error: ' + (resp.message || 'No data available') );
+              console.info( resp.status ) :
+                console.error( 'Error: ' + (resp.message || 'No data available' ) );
           })
           .catch(function(resp)
           {
-            console.error('Error: ' + (resp.message || 'No data available') );
+            console.error( 'Error: ' + ( resp.message || 'No data available' ) );
           });
         }
         else
         {
           var xhr = new XMLHttpRequest();
-          xhr.open(mthd, actn, true);
-          xhr.setRequestHeader('Content-type', ct);
+          xhr.open( mthd, actn, true );
+          xhr.setRequestHeader( 'Content-type', ct );
           // consider setting credentials header based on data-with-credentials attribute
           xhr.onreadystatechange = function()
           {
             this.readyState === 4 ? 
               (
-                (this.status >= 200 && this.status < 300) ? // don't revise to onload, for the sake of backwards compatibility
+                ( this.status >= 200 && this.status < 300 ) ? // don't revise to onload, for the sake of backwards compatibility
                   // do something or execute configurable function to be specified in init() object
-                  console.info(xhr.responseText) :
-                    console.error('Error: ' + (xhr.status || 'No data available') )
+                  console.info( xhr.responseText ) :
+                    console.error( 'Error: ' + ( xhr.status || 'No data available' ) )
               ) : 
-                  console.error('Error: ' + (xhr.status || 'No data available') );
+                  console.error( 'Error: ' + ( xhr.status || 'No data available' ) );
           };
-          xhr.send(rqbd); // no body for GET requests, as the query is added to the URL as a query string behind '?'
+          xhr.send( rqbd ); // no body for GET requests, as the query is added to the URL as a query string behind '?'
         }
       },
       
@@ -118,17 +118,17 @@
         for(; len > z; z++)
         {
           var eListener = ( // use ternaries as more concise if-elseif-else hell
-                            (!!'addEventListener' in this) ?
+                            ( 'addEventListener' in this ) ?
                               'addEventListener' :
-                                (!!'attachEvent' in this) ? 
+                                ( 'attachEvent' in this ) ? 
                                   'attachEvent' :
                                     null
                           ),
-              ev        = (!!'addEventListener' in this) ?
+              ev        = ( 'addEventListener' in this ) ?
                               'submit' :
                                 'onsubmit';
                                 
-          if(!!eListener)
+          if( !!eListener )
           { // thing[thing] corresponds to thing.thing
             forms[z][eListener](ev, formalhaut.prepForm);
           }
