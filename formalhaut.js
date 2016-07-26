@@ -1,6 +1,6 @@
 ;(function()
 {
-  if('querySelectorAll' in this.document)
+  if( 'querySelectorAll' in this.document )
   {
     window.formalhaut = 
     {
@@ -16,7 +16,7 @@
                     j      = 0,
                     str    = []; // initialise query string
                     
-                for(; i > j; j++)
+                for( ; i > j; j++ )
                 {
                   var q = ( // need the name attributes and entered values
                             !!inputs[j].getAttribute( 'name' ) && !!inputs[j].value ? 
@@ -115,7 +115,7 @@
             len   = forms.length,
             z     = 0;
             
-        for(; len > z; z++)
+        for( ; len > z; z++ )
         {
           var eListener = ( // use ternaries as more concise if-elseif-else hell
                             ( 'addEventListener' in this ) ?
@@ -130,7 +130,7 @@
                                 
           if( !!eListener )
           { // thing[thing] corresponds to thing.thing
-            forms[z][eListener](ev, formalhaut.prepForm);
+            forms[z][eListener]( ev, formalhaut.prepForm );
           }
           else
           {
@@ -142,7 +142,7 @@
   }
   else
   { // querySelectorAll (IE8) enjoys less browser support than XMLHttpRequest (IE7), so it's a logical means to condition support of this lib
-    console.warn("Your browser does not seem to support formalhaut.js");
+    console.warn( 'Your browser does not seem to support formalhaut.js' );
   }
 })();
 // call init() to apply to all forms
