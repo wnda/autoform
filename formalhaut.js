@@ -66,7 +66,7 @@
                       )
                     );
                     
-        if( 'fetch' in window ) // fetch barely supported yet
+        if( 'fetch' in this ) // fetch barely supported yet
         {
           fetch(actn,
           {
