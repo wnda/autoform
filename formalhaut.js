@@ -66,7 +66,7 @@
                       )
                     );
                     
-        if( !!window.fetch ) // fetch barely supported yet
+        if( 'fetch' in window ) // fetch barely supported yet
         {
           fetch(actn,
           {
@@ -90,7 +90,7 @@
             console.error( 'Error: ' + ( resp.message || 'No data available' ) );
           });
         }
-        else
+        else if( 'XMLHttpRequest' in this )
         {
           var xhr = new XMLHttpRequest();
           xhr.open( mthd, actn, true );
@@ -108,6 +108,10 @@
                   console.error( 'Error: ' + ( xhr.status || 'No data available' ) );
           };
           xhr.send( rqbd ); // no body for GET requests, as the query is added to the URL as a query string behind '?'
+        }
+        else
+        {
+          console.error( 'XHR API not supported' );
         }
       },
       
