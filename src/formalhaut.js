@@ -1,6 +1,6 @@
 ;(function()
 {
-  if( 'querySelectorAll' in this.document )
+  if( 'querySelectorAll' in document )
   {
     var settings;
     
@@ -66,7 +66,7 @@
                       )
                     );
                     
-        if( 'fetch' in this ) // fetch barely supported yet
+        if( 'fetch' in window ) // fetch barely supported yet
         {
           fetch(actn,
           {
@@ -90,7 +90,7 @@
             console.error( 'Error: ' + ( resp.message || 'No data available' ) );
           });
         }
-        else if( 'XMLHttpRequest' in this )
+        else if( 'XMLHttpRequest' in window )
         {
           var xhr = new XMLHttpRequest();
           xhr.open( mthd, actn, true );
@@ -132,14 +132,14 @@
         for( ; len > z; z++ )
         {
           var eListener = // use ternaries as more concise if-elseif-else hell
-                          ( 'addEventListener' in this ) ?
+                          ( 'addEventListener' in window ) ?
                             'addEventListener' :
                               ( 
-                                ( 'attachEvent' in this ) ? 
+                                ( 'attachEvent' in window ) ? 
                                   'attachEvent' :
                                     null 
                               ),
-              ev        = ( 'addEventListener' in this ) ?
+              ev        = ( 'addEventListener' in window ) ?
                               'submit' :
                                 'onsubmit';
                                 
