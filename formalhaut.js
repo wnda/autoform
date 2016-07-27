@@ -123,13 +123,14 @@
             
         for( ; len > z; z++ )
         {
-          var eListener = ( // use ternaries as more concise if-elseif-else hell
-                            ( 'addEventListener' in this ) ?
-                              'addEventListener' :
+          var eListener = // use ternaries as more concise if-elseif-else hell
+                          ( 'addEventListener' in this ) ?
+                            'addEventListener' :
+                              ( 
                                 ( 'attachEvent' in this ) ? 
                                   'attachEvent' :
-                                    null
-                          ),
+                                    null 
+                              ),
               ev        = ( 'addEventListener' in this ) ?
                               'submit' :
                                 'onsubmit';
