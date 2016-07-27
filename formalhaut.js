@@ -2,6 +2,8 @@
 {
   if( 'querySelectorAll' in this.document )
   {
+    var settings;
+    
     window.formalhaut = 
     {
       prepForm : function(e)
@@ -11,7 +13,7 @@
             query  = 
               (function()
               { // wrap the query string in a closure
-                var inputs = form.querySelectorAll( 'input,textarea' ), // discourage the use of input[type=submit]
+                var inputs = form.querySelectorAll( ( settings.selectors ) ), // get the selectors from the init object
                     i      = inputs.length,
                     j      = 0,
                     str    = []; // initialise query string
@@ -109,8 +111,12 @@
         }
       },
       
-      init : function()
+      init : function(config)
       {
+        settings = {
+          selectors : config && config.selectors ? config.selectors : 'input,textarea' // consider filtering out input[type=submit]
+        };
+        
         var forms = document.forms || document.getElementsByTagName('form'),
             len   = forms.length,
             z     = 0;
