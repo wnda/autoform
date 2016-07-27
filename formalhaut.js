@@ -13,7 +13,7 @@
             query  = 
               (function()
               { // wrap the query string in a closure
-                var inputs = form.querySelectorAll( ( settings.selectors ) ), // get the selectors from the init object
+                var inputs = form.querySelectorAll( settings.selector ), // get the selectors from the init object
                     i      = inputs.length,
                     j      = 0,
                     str    = []; // initialise query string
@@ -114,7 +114,11 @@
       init : function(config)
       {
         settings = {
-          selectors : config && config.selectors ? config.selectors : 'input,textarea' // consider filtering out input[type=submit]
+          selector : config && // config object must exist
+                     config.selector && // selector property must exist
+                     typeof config.selector === 'string' ? // selector must be a string
+                       config.selector : 
+                         'input,textarea' // consider filtering out input[type=submit]
         };
         
         var forms = document.forms || document.getElementsByTagName('form'),
