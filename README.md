@@ -1,4 +1,4 @@
-# formalhaut
+# autoform
 a drop in vanilla JS lib to declaratively auto-ajaxify forms
 
 ### declarative
