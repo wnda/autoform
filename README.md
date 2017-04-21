@@ -1,4 +1,7 @@
 # autoform
+
+[NB: this is in the process of being improved and will not remain the same for much longer]
+
 a drop in vanilla JS lib to declaratively auto-ajaxify forms
 
 ### declarative
